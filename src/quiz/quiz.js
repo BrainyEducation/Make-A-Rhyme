@@ -1,6 +1,5 @@
 // Get the quiz word from cookies
 var word = read_cookie('quizWord');
-console.log(word);
 var sight_word = word.word;
 var categoryTemp = word.category;
 
@@ -19,11 +18,17 @@ var sightWordImg = '../../assets/word_assets/word_art/' + categoryTemp + '/' + s
 
 // Run quiz when the page has loaded
 window.onload = function runQuiz() {
-    let result = document.getElementById("result");
     document.getElementById('word_art').src = sightWordImg;
 
-    // Quiz logic
-    showLearnWord();
+    $.when( $('#loadIndicator').fadeOut(1000))
+        .done(function() {
+            document.getElementById("stars").style.display = 'block';
+            document.getElementById('word_art').style.display = 'block';
+            document.getElementById("choices").style.display = 'flex';
+
+            // Quiz logic
+            showLearnWord();
+        });
 }
 
 // Play sight word audio when quiz starts
@@ -45,7 +50,6 @@ function showLearnWord() {
         shuffle_btns(); 
     }, 2500);
 }
-
 
 // Function to update the number of stars (consecutive correct guesses)
 function updateStars() {
@@ -150,9 +154,6 @@ function checkAnswer(clicked_id) {
     
     // If correct choice
     if (clicked_word == sight_word) {
-        // Visual feedback for correct
-        result.innerHTML = "Correct!";
-        result.style.color = "#1fb535";
         // Randomly selects a praise from audio.js
         random_praise = praises[Math.floor(Math.random() * 42)];
         correct_audio = new Audio('../../assets/quiz_audio/praise_phrases/' + random_praise + ".mp3");
@@ -164,9 +165,6 @@ function checkAnswer(clicked_id) {
         }
         consecutive_incorrect = 0;
     } else {
-        // Visual feedback for incorrect
-        result.innerHTML = "Wrong!";
-        result.style.color = "red";
         if (consecutive_correct != 0) {
             instructions_audio.play();
             timedAudio = setTimeout(function(){ sight_word_audio.play(); }, 2200);
@@ -197,14 +195,12 @@ function checkAnswer(clicked_id) {
         
         words[categoryTemp].find(function(word){ return word.word == sight_word;}).learned = true;
         window.localStorage.setItem('words', JSON.stringify(words));
-        
-        console.log(window.localStorage.getItem('words'));
-        
+
         // Wait few seconds and return to poem page
         setTimeout(function(){
             bake_cookie("mastered", true);
             bake_cookie("reload", true);
-            window.history.back();
+            window.location.replace(read_cookie("quizReturn"));
         }, 2000);
     } else if (consecutive_incorrect >= 3) {
         showLearnWord();
@@ -218,7 +214,7 @@ function checkAnswer(clicked_id) {
 function onClickBack() {
     bake_cookie("mastered", false);
     bake_cookie("reload", true);
-    window.history.back();
+    window.location.replace(read_cookie("quizReturn"));
 }
 
 // Read JSON from cookies

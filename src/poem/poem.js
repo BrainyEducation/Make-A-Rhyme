@@ -341,12 +341,56 @@ CanvasState.prototype.handleEvent = function(evt) {
 
     this.draw();
 }
+
+function wordChoiceScrollButtonSetup() {
+    // Make a container element for the lists and set HTML class tag
+    let listContainer = document.getElementById('wordLists');
+
+    var distancePerSec = 150;
+
+    $("#upButton").hover(function() {
+
+        var targetScrollTop = 0;
+        var distanceToTravel = $('#wordLists').scrollTop();
+        var animationDuration = (distanceToTravel / distancePerSec) * 1000;
+
+        $("#wordLists").animate({
+            scrollTop: targetScrollTop
+        }, animationDuration, 'linear');
+
+    }, function() {
+
+        // stop the animation
+        $("#wordLists").stop();
+
+    });
+
+    $("#downButton").hover(function() {
+        var maxChildHeight = 0;
+
+        $('#wordLists').children().each(function(){
+            var thisH = $(this).height();
+            if (thisH > maxChildHeight) { maxChildHeight = thisH; }
+        });
+
+        var h = $('#wordLists').height();
+        var targetScrollTop = maxChildHeight - h + 20;
+        var distanceToTravel = targetScrollTop - $('#wordLists').scrollTop();
+        var animationDuration = (distanceToTravel / distancePerSec) * 1000;
+
+        $("#wordLists").animate({
+            scrollTop: targetScrollTop
+        }, animationDuration, 'linear');
+
+    }, function() {
+
+        // stop the animation
+        $("#wordLists").stop();
+
+    });
+}
+
 function makeList(categories, canvasState) {
-    
-    let exisitingLists = document.getElementById('wordLists');
-    if (exisitingLists) {
-        exisitingLists.parentElement.removeChild(exisitingLists);
-    }
 
     // Establish the array which acts as a data source for the list
     var listData = [];
@@ -360,11 +404,17 @@ function makeList(categories, canvasState) {
             Array.prototype.push.apply(listData, JSON.parse(window.localStorage.getItem('words'))[categories[i]]);
         }
     }
+
+    // Get and show choices list
+    let wordChoices = document.getElementById('wordChoices');
+    wordChoices.style.display = 'flex';
+
+    wordChoiceScrollButtonSetup();
     
-    // Make a container element for the lists and set HTML class tag
-    let listContainer = document.createElement('div');
-    listContainer.className = "wordLists";
-    listContainer.id = "wordLists";
+    // Get the container element for the lists
+    let listContainer = document.getElementById('wordLists');
+    // Clear list container of previous items
+    listContainer.innerHTML = '';
     
     // Create HTML list elements for mastered and unmastered words and set HTML class tag
     // Mastered words
@@ -447,7 +497,6 @@ function makeList(categories, canvasState) {
                         typeWriter();
                         playClipAndContinue(clip_name);
                     }
-                    listContainer.parentElement.removeChild(listContainer);
                 }
                 masteredWordsListElement.append(listItem);
             }
@@ -461,8 +510,6 @@ function makeList(categories, canvasState) {
                     typeWriter();
                     playClipAndContinue(clip_name);
                 }
-                listContainer.parentElement.removeChild(listContainer);
-                // readPoem();
             }
             masteredWordsListElement.append(listItem);
         } else {
@@ -480,25 +527,22 @@ function makeList(categories, canvasState) {
             unmasteredWordsListElement.append(listItem);
         }
     }
-    // Add the lists div to the body of page
-    document.getElementById('container').appendChild(listContainer);
+
 }
 
 function makeNamesList(categories, canvasState, clickedPerson) {
 
     pickNameAudio();
-    let exisitingLists = document.getElementById('wordLists');
-    if (exisitingLists) {
-        exisitingLists.parentElement.removeChild(exisitingLists);
-    }
+    // Get and show choices list
+    let wordChoices = document.getElementById('wordChoices');
+    wordChoices.style.display = 'flex';
 
     // Establish the array which acts as a data source for the list
     var listData = JSON.parse(window.localStorage.getItem('friends'));
-    
-    // Make a container element for the lists and set HTML class tag
-    let listContainer = document.createElement('div');
-    listContainer.className = "wordLists";
-    listContainer.id = "wordLists";
+
+    // Get the container element for the lists and clear contents
+    let listContainer = document.getElementById('wordLists');
+    listContainer.innerHTML = '';
     
     // Create HTML list elements for mastered and unmastered words and set HTML class tag
     let friendListElement = document.createElement('ul');
@@ -553,8 +597,6 @@ function makeNamesList(categories, canvasState, clickedPerson) {
         }
     });
 
-    // Add the lists div to the body of page
-    document.getElementById('container').appendChild(listContainer);
 }
 
 function bake_cookie(name, value) {
@@ -729,26 +771,30 @@ function printPoem() {
 
 // Init function called on page load
 function init() {
-    // console.log(getCookie("currentPoem"));
     document.getElementById("print-poem").style.display = "none";
     document.getElementById("read-button").style.display = "none";
     var canvas = document.getElementById('canvas');
+    if (!canvas) {
+        window.location.reload(false);
+    }
     var s = new CanvasState(canvas);
-    var width = canvas.width;
-    var height = canvas.height;
+
     window.addEventListener('resize', s, false);
     currentPoem = getCookie("currentPoem");
+    
     // if we are coming back from the quiz, reload state of words
-
     if (read_cookie('reload')) {
         s.loadState();
         s.draw();
+        if (!read_cookie('mastered')) {
+            poemIndex--;
+            boxIndex--;
+        }
         bake_cookie('reload', false);
         myState = s;
         $.getJSON("poem_data.json", function(data) {
             boxArr = data["poems"][getCookie("currentPoem")]["cueBox"];
             poemTextArr = data["poems"][getCookie("currentPoem")]["text"];
-            readPoem();
         });
     } else { // else, get word info from JSON
         $.getJSON("poem_data.json", function(data) {
@@ -758,19 +804,26 @@ function init() {
             for (typingIndex = 0; typingIndex < wordsArr.length; typingIndex++) {
                 var word = wordsArr[typingIndex];
                 s.addWord(new WordBox(word["x"], word["y"], 1, 1, fillColor, word["categories"], word["spot-id"]))
-            } 
+            }
         });
         myState = s;
         $.getJSON("poem_data.json", function(data) {
             boxArr = data["poems"][getCookie("currentPoem")]["cueBox"];
             poemTextArr = data["poems"][getCookie("currentPoem")]["text"];
             document.title = data["poems"][getCookie("currentPoem")]["name"];
-            readPoem();
         });
     }
+
     $.getJSON("poem_data.json", function(data) {
         poemName = data["poems"][currentPoem]["name"];
     });
+
+    $.when( $('#loadIndicator').fadeOut(1000))
+        .done(function() {
+            document.getElementById('container').style.display = 'block';
+            document.getElementById('poem_text').style.display = 'block';
+            readPoem();
+        });
 }
 
 
