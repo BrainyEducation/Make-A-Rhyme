@@ -5,12 +5,12 @@ function playClip(clip_name) {
         }
     } else {
         var audio = document.getElementById(clip_name);
-        console.log(audio);
+        // console.log(audio);
         const playPromise = audio.play();
         
         if (playPromise !== null){
             playPromise.catch(() => { audio.play(); })
-            console.log("User needs to click on page first");
+            // console.log("User needs to click on page first");
         }
     }
 }

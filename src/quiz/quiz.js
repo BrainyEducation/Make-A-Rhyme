@@ -120,9 +120,7 @@ function shuffle_btns() {
             // Take 1st 3 words from the shuffled words then add the sight word and shuffle their order
             randomTen = randomTen.splice(0,3);
             randomTen.push(sight_word);
-            console.log(randomTen);
             randomTen.sort(() => Math.random() - 0.5);
-            console.log(randomTen);
 
             // Set word for each button
             var button_ids = ["btn1", "btn2", "btn3", "btn4"];

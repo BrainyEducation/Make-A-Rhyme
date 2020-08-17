@@ -152,14 +152,14 @@ function CanvasState(canvas) {
         var mx = mouse.x;
         var my = mouse.y;
         var words = myState.words;
-        console.log(myState.poemComplete);
+        // console.log(myState.poemComplete);
         // Look through all of the WordBoxes to see if the mouse is inside of it
         for (var i = 0; i < words.length; i++) {
             // If where you clicked is inside of a WordBox, set the "clicked" state to true
             // This way the "selected" element won't be overwritten when you mouse over another object
             
             if (myState.poemComplete && words[i].contains(mx, my, myState.ctx)) {
-                console.log("clicked on one!");
+                // console.log("clicked on one!");
                 makeList(words[i].categories, myState);
                 myState.selection = words[i];
                 myState.clicked = true;
@@ -738,7 +738,7 @@ function readPoem() {
 }
 
 function chooseWord(boxID, canvasState) {
-    console.log(fullPoemText);
+    // console.log(fullPoemText);
     if (!boxID) {
         poemCompleted = true;
         canvasState.poemComplete = true;
