@@ -1,0 +1,19 @@
+{
+  "name": "make-a-rhyme-web",
+  "version": "1.0.0",
+  "description": "An iteractive web app to teach children sight words by using fun fillable rhymes and illustrations. Designed for our client, Dr. Walter Evans as part of our Junior Design project for Georgia Tech.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrainyEducation/make-a-rhyme-web.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BrainyEducation/make-a-rhyme-web/issues"
+  },
+  "homepage": "https://github.com/BrainyEducation/make-a-rhyme-web#readme"
+}
