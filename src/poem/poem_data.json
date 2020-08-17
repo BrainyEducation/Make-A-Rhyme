@@ -1,0 +1,329 @@
+{
+    "poems": {
+        "parade": {
+            "name": "Strange Parade",
+            "image": "../../assets/poem_art/Strange-Parade.png",
+            "img_w": "930px",
+            "img_h": "653px",
+            "words": [
+                {
+                    "x": 0.166666667,
+                    "y": 0.12745098,
+                    "categories": [12],
+                    "spot-id": "A"
+                },
+                {
+                    "x": 0.095,
+                    "y": 0.357843137,
+                    "categories": [1, 2, 4, 5, 6],
+                    "spot-id": "M"
+                },
+                {
+                    "x": 0.226666667,
+                    "y": 0.355392157,
+                    "categories": [1, 2, 4, 5, 6],
+                    "spot-id": "L"
+                },
+                {
+                    "x": 0.285,
+                    "y": 0.06127451,
+                    "categories": [2, 4, 5, 6],
+                    "spot-id": "B"
+                },
+                {
+                    "x": 0.43,
+                    "y": 0.093137255,
+                    "categories": [1, 2, 4, 5, 6],
+                    "spot-id": "C"
+                },
+                {
+                    "x": 0.213333333,
+                    "y": 0.674019608,
+                    "categories": [13],
+                    "spot-id": "N"
+                },
+                {
+                    "x": 0.283333333,
+                    "y": 0.632352941,
+                    "categories": [1, 2, 4, 5, 6],
+                    "spot-id": "O"
+                },
+                {
+                    "x": 0.426666667,
+                    "y": 0.632352941,
+                    "categories": [1, 2, 4, 5, 6],
+                    "spot-id": "P"
+                },
+                {
+                    "x": 0.658333333,
+                    "y": 0.595588235,
+                    "categories": [1, 2, 4, 5, 6],
+                    "spot-id": "Q"
+                },
+                {
+                    "x": 0.685,
+                    "y": 0.357843137,
+                    "categories": [1, 2, 4, 5, 6],
+                    "spot-id": "I"
+                },
+                {
+                    "x": 0.543333333,
+                    "y": 0.357843137,
+                    "categories": [1, 2, 4, 5, 6],
+                    "spot-id": "J"
+                },
+                {
+                    "x": 0.81,
+                    "y": 0.355392157,
+                    "categories": [1, 2, 4, 5, 6],
+                    "spot-id": "H"
+                },
+                {
+                    "x": 0.808333333,
+                    "y": 0.789215686,
+                    "categories": [7,9,10,14],
+                    "spot-id": "S"
+                },
+                {
+                    "x": 0.668333333,
+                    "y": 0.218137255,
+                    "categories": [2, 4, 5, 6],
+                    "spot-id": "E"
+                },
+                {
+                    "x": 0.668333333,
+                    "y": 0.105392157,
+                    "categories": [2, 4, 5, 6],
+                    "spot-id": "D"
+                },
+                {
+                    "x": 0.788333333,
+                    "y": 0.18382353,
+                    "categories": [12],
+                    "spot-id": "G"
+                },
+                {
+                    "x": 0.786666667,
+                    "y": 0.017156863,
+                    "categories": [2, 4, 5, 6],
+                    "spot-id": "F"
+                },
+                {
+                    "x": 0.343333333,
+                    "y": 0.355392157,
+                    "categories": [1,2, 4, 5, 6],
+                    "spot-id": "K"
+                },
+                {
+                    "x": 0.66166667,
+                    "y": 0.75245098,
+                    "categories": [7,9,10,14],
+                    "spot-id": "R"
+                }
+            ],
+            "text": [
+                "Who made the strange parade at our house? With a",
+                "in front pulled by a mouse, bumped in back by some",
+                "slurping ice cream, and a",
+                "and",
+                "yoked as a team, hauling a",
+                "atop which some",
+                "rode, and giggled to see a",
+                "kiss a toad, and a",
+                "and",
+                "danced together, as some",
+                "tickled both with a peacock feather. A",
+                "and a",
+                "on a rope hanging down, tossed eggs at a",
+                "who tried not to frown, while a",
+                "gobbled",
+                "and burped, at a",
+                "who spilled chocolate milk as it slurped, and a strange smelling",
+                "on a",
+                "winked at me as we sat on a",
+                "for an hour to sight-see. Who could dream up a strange parade of this kind? Did I maybe just make it all up in my mind? "
+            ],
+            "cueBox": [
+                "A",
+                "B", 
+                "D",
+                "E",
+                "G",
+                "F",
+                "C",
+                "J",
+                "H",
+                "I",
+                "K",
+                "M",
+                "L",
+                "O",
+                "N",
+                "P",
+                "Q",
+                "R",
+                "S"
+            ]
+        },
+        "picnic": {
+            "name": "Pet Party Picnic",
+            "image": "../../assets/poem_art/Pet-Party-Picnic.png",
+            "img_w": "930px",
+            "img_h": "653px",
+            "words": [
+                {
+                    "x": 0.077142857,
+                    "y": 0.25210084,
+                    "categories": [1],
+                    "spot-id": "F"
+                },
+                {
+                    "x": 0.302857143,
+                    "y": 0.016806723,
+                    "categories": [19],
+                    "spot-id": "A"
+                },
+                {
+                    "x": 0.502857143,
+                    "y": 0.075630252,
+                    "categories": [4, 5, 6],
+                    "spot-id": "B"
+                },
+                {
+                    "x": 0.608571429,
+                    "y": 0.31092437,
+                    "categories": [1],
+                    "spot-id": "D"
+                },
+                {
+                    "x": 0.457142857,
+                    "y": 0.470588235,
+                    "categories": [4, 5, 6],
+                    "spot-id": "C"
+                },
+                {
+                    "x": 0.137142857,
+                    "y": 0.453781513,
+                    "categories": [4, 5, 6],
+                    "spot-id": "E"
+                }
+            ],
+            "text": [
+                "Once on a pretend time didn’t you tell me how",
+                "hosted a happy pet-pair party?",
+                "decided on goodies to buy at the store, And with favorite pet",
+                "made a guest list for four, invited ",
+                "with a pet",
+                "to attend, and",
+                "paired with a pet",
+                "best friend.",
+                "spread a bright blanket with places for six, and bowls for ",
+                "food, ",
+                "food, and a mix of treats for the picky ",
+                "For the rest cold milk, ",
+                "on a platter, and the best ice cream — chocolate, vanilla, strawberry - topped with sprinkles, ",
+                "a bright red cherry, and butterscotch syrup! Gosh it was yummy. Yum yummy in my tum, tum, tummy! The ",
+                " and ",
+                " and ",
+                " played so well, and everyone loved it, so I heard tell,",
+                " kept bragging that",
+                " was so clever, And ",
+                " declared it the best party ever!"
+            ],
+            "cueBox": [
+                "A",
+                "A",
+                "B",
+                "D",
+                "C",
+                "F",
+                "E",
+                "A",
+                "B",
+                "C",
+                "E",
+                "N/A",
+                "N/A",
+                "B",
+                "C",
+                "E",
+                "D",
+                "A",
+                "F"
+            ]
+        },
+        "park": {
+            "name": "Muddy Park",
+            "image": "../../assets/poem_art/Muddy-Park.png",
+            "img_w": "930px",
+            "img_h": "653px",
+            "words": [
+                {
+                    "x": 0.46,
+                    "y": 0.1852941176,
+                    "categories": [4, 5, 6],
+                    "spot-id": "D"
+                },
+                {
+                    "x": 0.748,
+                    "y": 0.4176470588,
+                    "categories": [19],
+                    "spot-id": "C"
+                },
+                {
+                    "x": 0.668,
+                    "y": 0.6235294118,
+                    "categories": [1],
+                    "spot-id": "E"
+                },
+                {
+                    "x": 0.56,
+                    "y": 0.7411764706,
+                    "categories": [4, 5, 6],
+                    "spot-id": "B"
+                },
+                {
+                    "x": 0.436,
+                    "y": 0.6647058824,
+                    "categories": [1],
+                    "spot-id": "A"
+                }
+            ],
+            "text": [
+                "Once on a pretend time didn’t you tell me",  
+                "once walked a",
+                "to the park to run free, There met a",
+                "with a pet",
+                "The pets scuffled and tussled every which way— Your ",
+                "chased the",
+                "all around, The swings, towers, trash cans round the playground, Under a see-saw the ",
+                "tried to hide, Then climbed up and tumbled back down the slide, Upset a kid’s play pool, shook water and dripped A slippery mud puddle, and the ",
+                "tripped, the clumsy ",
+                "who flopped and wallowed And knocked down some poor ",
+                "who followed Trying to help, but flip-flopped down too, Then ",
+                "and the ",
+                "both muddy with goo, dragged down with the ",
+                "all three sunk down, in the oozy, slop-sloshery muck gunk. How awfully— fun to sit sunk to the chin, The ",
+                "and",
+                "grinned—and just had to jump in. Grumpy grownups scrubbed clean the kids odds and ends, but everyone made lots of new mud-loving friends!"
+            ],
+            "cueBox": [
+                "C",
+                "D",
+                "A",
+                "B",
+                "D",
+                "B",
+                "B",
+                "D",
+                "A",
+                "E",
+                "A",
+                "E",
+                "B",
+                "D",
+                "C"
+            ]
+        }
+    }
+}

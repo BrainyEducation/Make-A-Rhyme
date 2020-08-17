@@ -1,0 +1,142 @@
+html {
+    background-color: #70C7D1;
+}
+
+body {
+    overflow: hidden
+}
+
+ul {
+    list-style-type: none;
+}
+
+#container {
+    display: block;
+    /*height: 100vh;*/
+    padding-left:5vw;
+}
+
+#target {
+    display: inline-block;
+    position: relative;
+    z-index: 0;
+}
+
+#poem_text {
+    display: block;
+    position: relative;
+    text-align: center;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: 1.5em;
+}
+
+#completed_text {
+    display: block;
+    position: relative;
+    text-align: center;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: 1.5em;
+}
+
+/* Custom sidebar CSS to make it smaller */
+.sidenav {
+    min-width: 1em;
+    width: 5vw;
+}
+.sidenav img {
+    width: 5vw;
+    height: 5vw;
+}
+
+/* WORD SELECTION LIST*/
+.wordLists {
+    background-color: #E58F65;
+
+    display: inline-block;
+    position: fixed;
+
+    margin: 0.5em;
+
+    right: 0;
+    top: 0;
+
+    width: 25%;
+    max-width: 18em;
+    height: 653px;
+    max-height: 63vw;
+
+    overflow: scroll;
+    border-radius: 1em;
+    margin-bottom: 1em;
+    z-index: 1;
+
+    text-align: center;
+}
+
+.wordsListElement {
+    list-style: none;
+    width: auto;
+    display: inline-block;
+    padding-inline-start: 0;
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+    margin: 5%;
+    min-width: 5.1em;
+    vertical-align:top;
+}
+
+.masteredWordsListElement {
+
+}
+
+.unmasteredWordsListElement {
+    filter: grayscale(100%);
+}
+
+.WordItem {
+    text-align: center;
+    background-color: antiquewhite;
+    border: 0.25em;
+    border-radius: 1em;
+    margin-bottom: 0.5em;
+}
+
+
+    .WordItem h2 {
+        margin-bottom: 0;
+        padding: 0.2em;
+        font-family: "Comic Sans MS", cursive, sans-serif;
+    }
+
+
+.WordItem img {
+    width: 5em;
+    height: auto;
+}
+
+#images {
+    display:none;
+}
+
+#poemTextPrint {
+    display: none;
+}
+
+#poemTitlePrint {
+    display: none;
+}
+#poem_text {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    background-color: #C2EAE9;
+    border-radius: 0.4em;
+    padding: 0.5em;
+}
+
+.friendListElement {
+    margin: 1em;
+    padding: 0;
+}

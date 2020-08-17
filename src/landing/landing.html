@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <!--    Imports    -->
+        <!--    CSS    -->
+        <link rel="stylesheet" href="../global/cursor.css">
+        <link rel ="stylesheet" href="../global/sidenav.css">
+        <link rel="stylesheet" href="landing.css">
+        <!--    JS    -->
+        <script src="../global/PapaParse-5.0.2/papaparse.min.js"></script>
+        <script src="../global/words.js"></script>
+        <script type="text/javascript" src="landing.js"></script>
+        <title>Make A Rhyme</title>
+    </head>
+    
+    <body>
+        <div class ="sidenav">
+            <img class="clickable" id="back" src="../../assets/backarrow.png" alt="back" width='100vw' height='100vw' onclick="window.history.back()">
+            <img class="clickable" id="home" src="../../assets/homeButton.png" alt="home" width='100vw' height='100vw' onclick="location.href = '../login/login.html';">
+            <img class="clickable" id="wordbank" src="../../assets/wordBank.png" alt="wordbank" width='100vw' height='100vw' onclick="location.href='../wordBank/wordBank.html';">
+            <img class="clickable" id="friends" src="../../assets/category_assets/friendButton.png" alt="friends" onclick="location.href='../friends/friends.html';">
+        </div>
+        
+        <header>Rhymes</header>
+        <div class="row">
+            <div class="column" onmouseover="playClip('parade_audio');" onmouseout="stopClip('parade_audio');">
+                <img class="clickable" src="../../assets/poem_art/Strange-Parade.png" alt="Parade" onclick="switchPoem('parade');">
+            </div>
+            <div class="column" onmouseover="playClip('park_audio');" onmouseout="stopClip('park_audio');">
+                <img class="clickable" src="../../assets/poem_art/Muddy-Park.png" alt="MuddyPark" onclick="switchPoem('park');">
+            </div>
+            <div class="column" onmouseover="playClip('pet_party_audio');" onmouseout="stopClip('pet_party_audio');">
+                <img class="clickable" src="../../assets/poem_art/Pet-Party-Picnic.png" alt="Picnic" onclick="switchPoem('picnic');">
+            </div>
+        </div>
+    </body>
+    
+        
+        <audio id="pet_party_audio">
+            <source src="../../assets/audio/pet_party.wav">
+        </audio>
+        <audio id="parade_audio">
+            <source src="../../assets/audio/strange_parade.wav">
+        </audio>
+        <audio id="park_audio">
+            <source src="../../assets/audio/muddy_park.wav">
+        </audio>
+        <div id="sounddiv"><bgsound id="sound"></div>
+            
+</html>

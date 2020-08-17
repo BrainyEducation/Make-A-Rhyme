@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--    Imports    -->
+        <!--    CSS    -->
+        <link rel="stylesheet" href="../global/cursor.css">
+        <link rel="stylesheet" href="login.css">
+        <!--    JS    -->
+        <script src="../global/PapaParse-5.0.2/papaparse.min.js"></script>
+        <script type="text/javascript" src="login.js"></script>
+        <title>Welcome</title>
+    </head>
+
+    <body>
+        <h1 align = "center"> Make A Rhyme </h1>
+        <div align = "center">
+            <a href = "../landing/landing.html" onmouseover="playClip('play_audio');" onmouseout="stopClip('play_audio');"> 
+                <img class="clickable" src = "../../assets/play.png" atl = "rainbow"/> 
+            </a>
+        </div>
+        <audio id="play_audio">
+            <source src="../../assets/audio/play.wav">
+        </audio>
+    </body>
+    
+</html>
+
+

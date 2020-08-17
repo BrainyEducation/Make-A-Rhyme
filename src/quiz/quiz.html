@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--    Imports    -->
+        <!--    CSS    -->
+        <link rel="stylesheet" href="quiz.css">
+        <link rel="stylesheet" href="../global/cursor.css">
+        <link rel="stylesheet" href="../global/sidenav.css">
+        <!--    JS    -->
+        <script src="../global/PapaParse-5.0.2/papaparse.min.js"></script>
+        <script src="../global/audio.js"></script>
+        <script src="../global/words.js"></script>
+        <script src="quiz.js"></script>
+    </head>
+    
+    <body>
+        
+        <div class ="sidenav">
+            <img class="clickable" id="back" src="../../assets/backarrow.png" alt="back" width='100vw' height='100vw' onclick="window.history.back()">
+            <img class="clickable" id="home" src="../../assets/homeButton.png" alt="home" width='100vw' height='100vw' onclick="location.href = '../login/login.html';">
+            <img class="clickable" id="wordbank" src="../../assets/wordBank.png" alt="wordbank" width='100vw' height='100vw' onclick="location.href='../wordBank/wordBank.html';">
+            <img class="clickable" id="friends" src="../../assets/category_assets/friendButton.png" alt="friends" onclick="location.href='../friends/friends.html';">
+        </div>
+        
+        <div id="stars">
+            <img class="star" src="../../assets/star_empty.png">
+            <img class="star" src="../../assets/star_empty.png">
+            <img class="star" src="../../assets/star_empty.png">
+        </div>
+        
+        <img id="word_art">
+        
+        <h2 id="result"></h2>
+        
+        <section id='choices'>
+            <div class="buttonsRow">
+                <button id='btn1' class="button-wrapper clickable" onclick="checkAnswer(this.id)"></button>
+                <button id='btn2' class="button-wrapper clickable" onclick="checkAnswer(this.id)"></button>
+            </div>
+            <div class="buttonsRow">
+                <button id='btn3' class="button-wrapper clickable" onclick="checkAnswer(this.id)"></button>
+                <button id='btn4' class="button-wrapper clickable" onclick="checkAnswer(this.id)"></button>
+            </div>
+        </section>
+
+        
+    </body>
+    
+</html>
