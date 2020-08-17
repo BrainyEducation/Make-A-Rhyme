@@ -771,26 +771,30 @@ function printPoem() {
 
 // Init function called on page load
 function init() {
-    // console.log(getCookie("currentPoem"));
     document.getElementById("print-poem").style.display = "none";
     document.getElementById("read-button").style.display = "none";
     var canvas = document.getElementById('canvas');
+    if (!canvas) {
+        window.location.reload(false);
+    }
     var s = new CanvasState(canvas);
-    var width = canvas.width;
-    var height = canvas.height;
+
     window.addEventListener('resize', s, false);
     currentPoem = getCookie("currentPoem");
+    
     // if we are coming back from the quiz, reload state of words
-
     if (read_cookie('reload')) {
         s.loadState();
         s.draw();
+        if (!read_cookie('mastered')) {
+            poemIndex--;
+            boxIndex--;
+        }
         bake_cookie('reload', false);
         myState = s;
         $.getJSON("poem_data.json", function(data) {
             boxArr = data["poems"][getCookie("currentPoem")]["cueBox"];
             poemTextArr = data["poems"][getCookie("currentPoem")]["text"];
-            readPoem();
         });
     } else { // else, get word info from JSON
         $.getJSON("poem_data.json", function(data) {
@@ -800,19 +804,26 @@ function init() {
             for (typingIndex = 0; typingIndex < wordsArr.length; typingIndex++) {
                 var word = wordsArr[typingIndex];
                 s.addWord(new WordBox(word["x"], word["y"], 1, 1, fillColor, word["categories"], word["spot-id"]))
-            } 
+            }
         });
         myState = s;
         $.getJSON("poem_data.json", function(data) {
             boxArr = data["poems"][getCookie("currentPoem")]["cueBox"];
             poemTextArr = data["poems"][getCookie("currentPoem")]["text"];
             document.title = data["poems"][getCookie("currentPoem")]["name"];
-            readPoem();
         });
     }
+
     $.getJSON("poem_data.json", function(data) {
         poemName = data["poems"][currentPoem]["name"];
     });
+
+    $.when( $('#loadIndicator').fadeOut(1000))
+        .done(function() {
+            document.getElementById('container').style.display = 'block';
+            document.getElementById('poem_text').style.display = 'block';
+            readPoem();
+        });
 }
 
 
