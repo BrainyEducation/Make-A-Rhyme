@@ -458,8 +458,8 @@ function makeList(categories, canvasState) {
         const wordCat = wordCatVar;
         const wordPerson = wordPersonVar;
         // Set up word audio on mouse over if not unnamed friend
+        const clip_name = '../../assets/word_assets/word_audio/' + wordName + '.mp3';
         if (wordName != "?") {
-            const clip_name = '../../assets/word_assets/word_audio/' + wordName + '.mp3';
             listItem.onmouseenter = function(){playClip(clip_name);};
             listItem.onmouseleave = function(){stopClip(clip_name);};
         }
