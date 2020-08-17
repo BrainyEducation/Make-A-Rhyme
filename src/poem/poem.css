@@ -10,9 +10,19 @@ ul {
     list-style-type: none;
 }
 
+#loadIndicator {
+    height: 10em;
+    width: 10em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%); /* IE 9 */
+    -webkit-transform: translate(-50%, -50%); /* Chrome, Safari, Opera */
+}
+
 #container {
-    display: block;
-    /*height: 100vh;*/
+    display: none;
     padding-left:5vw;
 }
 
@@ -20,14 +30,6 @@ ul {
     display: inline-block;
     position: relative;
     z-index: 0;
-}
-
-#poem_text {
-    display: block;
-    position: relative;
-    text-align: center;
-    font-family: "Comic Sans MS", cursive, sans-serif;
-    font-size: 1.5em;
 }
 
 #completed_text {
@@ -49,11 +51,12 @@ ul {
 }
 
 /* WORD SELECTION LIST*/
-.wordLists {
+#wordChoices {
     background-color: #E58F65;
-
-    display: inline-block;
     position: fixed;
+    display: none;
+
+    flex-direction: column;
 
     margin: 0.5em;
 
@@ -65,7 +68,6 @@ ul {
     height: 653px;
     max-height: 63vw;
 
-    overflow: scroll;
     border-radius: 1em;
     margin-bottom: 1em;
     z-index: 1;
@@ -73,20 +75,18 @@ ul {
     text-align: center;
 }
 
+#wordLists {
+    overflow: scroll;
+}
+
 .wordsListElement {
     list-style: none;
     width: auto;
     display: inline-block;
     padding-inline-start: 0;
-    /*margin-left: auto;*/
-    /*margin-right: auto;*/
     margin: 5%;
     min-width: 5.1em;
     vertical-align:top;
-}
-
-.masteredWordsListElement {
-
 }
 
 .unmasteredWordsListElement {
@@ -126,7 +126,7 @@ ul {
     display: none;
 }
 #poem_text {
-    display: block;
+    display: none;
     position: fixed;
     bottom: 0;
     margin-left: 50%;
@@ -134,9 +134,19 @@ ul {
     background-color: #C2EAE9;
     border-radius: 0.4em;
     padding: 0.5em;
+
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: 1.5em;
 }
 
 .friendListElement {
     margin: 1em;
     padding: 0;
+}
+
+.scrollButton {
+    height: 5em;
+    width: 5em;
+    margin-left: auto;
+    margin-right: auto;
 }
