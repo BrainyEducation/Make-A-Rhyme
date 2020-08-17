@@ -150,9 +150,6 @@ function checkAnswer(clicked_id) {
     
     // If correct choice
     if (clicked_word == sight_word) {
-        // Visual feedback for correct
-        result.innerHTML = "Correct!";
-        result.style.color = "#1fb535";
         // Randomly selects a praise from audio.js
         random_praise = praises[Math.floor(Math.random() * 42)];
         correct_audio = new Audio('../../assets/quiz_audio/praise_phrases/' + random_praise + ".mp3");
@@ -164,9 +161,6 @@ function checkAnswer(clicked_id) {
         }
         consecutive_incorrect = 0;
     } else {
-        // Visual feedback for incorrect
-        result.innerHTML = "Wrong!";
-        result.style.color = "red";
         if (consecutive_correct != 0) {
             instructions_audio.play();
             timedAudio = setTimeout(function(){ sight_word_audio.play(); }, 2200);
