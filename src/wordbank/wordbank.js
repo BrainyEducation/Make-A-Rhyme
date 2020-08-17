@@ -5,7 +5,7 @@ window.onload = function makeList() {
     
     // Establish the array which acts as a data source for the list
     var category = sessionStorage.getItem("category");
-    console.log(category);
+    // console.log(category);
 
     let listData = JSON.parse(window.localStorage.getItem('words'))[category],
 
@@ -42,7 +42,7 @@ window.onload = function makeList() {
 
         // Add audio mouse-over functionality to listItem
         const clip_name = '../../assets/word_assets/word_audio/' + wordName + '.mp3';   
-        console.log(clip_name);
+        // console.log(clip_name);
         listItem.onmouseover = function(){playClip(clip_name);};
         listItem.onmouseout = function(){stopClip(clip_name);};
 

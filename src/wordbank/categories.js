@@ -1,7 +1,7 @@
 // Creates category buttons 
 window.onload = function makeButtons() {
     let categoryList = categories;
-    console.log(categoryList.length);
+    // console.log(categoryList.length);
     var numberOfItems = categoryList.length,
     i;
     
@@ -21,7 +21,7 @@ window.onload = function makeButtons() {
 
         // Add audio mouse-over functionality to listItem
         const clip_name = '../../assets/category_assets/category_audio/' + categoryList[i] + '.mp3';   
-        console.log(clip_name);
+        // console.log(clip_name);
         listItem.onmouseover = function(){playClip(clip_name);};
         listItem.onmouseout = function(){stopClip(clip_name);};
 
