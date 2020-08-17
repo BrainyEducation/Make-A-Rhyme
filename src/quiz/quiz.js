@@ -1,6 +1,5 @@
 // Get the quiz word from cookies
 var word = read_cookie('quizWord');
-console.log(word);
 var sight_word = word.word;
 var categoryTemp = word.category;
 
@@ -19,11 +18,17 @@ var sightWordImg = '../../assets/word_assets/word_art/' + categoryTemp + '/' + s
 
 // Run quiz when the page has loaded
 window.onload = function runQuiz() {
-    let result = document.getElementById("result");
     document.getElementById('word_art').src = sightWordImg;
 
-    // Quiz logic
-    showLearnWord();
+    $.when( $('#loadIndicator').fadeOut(1000))
+        .done(function() {
+            document.getElementById("stars").style.display = 'block';
+            document.getElementById('word_art').style.display = 'block';
+            document.getElementById("choices").style.display = 'flex';
+
+            // Quiz logic
+            showLearnWord();
+        });
 }
 
 // Play sight word audio when quiz starts
@@ -45,7 +50,6 @@ function showLearnWord() {
         shuffle_btns(); 
     }, 2500);
 }
-
 
 // Function to update the number of stars (consecutive correct guesses)
 function updateStars() {
