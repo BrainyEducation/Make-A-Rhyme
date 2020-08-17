@@ -195,14 +195,12 @@ function checkAnswer(clicked_id) {
         
         words[categoryTemp].find(function(word){ return word.word == sight_word;}).learned = true;
         window.localStorage.setItem('words', JSON.stringify(words));
-        
-        console.log(window.localStorage.getItem('words'));
-        
+
         // Wait few seconds and return to poem page
         setTimeout(function(){
             bake_cookie("mastered", true);
             bake_cookie("reload", true);
-            window.history.back();
+            window.location.replace(read_cookie("quizReturn"));
         }, 2000);
     } else if (consecutive_incorrect >= 3) {
         showLearnWord();
@@ -216,7 +214,7 @@ function checkAnswer(clicked_id) {
 function onClickBack() {
     bake_cookie("mastered", false);
     bake_cookie("reload", true);
-    window.history.back();
+    window.location.replace(read_cookie("quizReturn"));
 }
 
 // Read JSON from cookies
