@@ -485,9 +485,18 @@ function makeList(categories, canvasState) {
         
         // Add listItem to the listElement
         if (listData[i].category == 19) {
+            // Play child instr
+            if (!read_cookie("seen_friends")) {
+                const instruction_clip_name = '../../assets/friend_audio/B1_pick_the_child_youd_like_to_name_then_pick_a_name.mp3';
+                playClip(instruction_clip_name)
+                bake_cookie("seen_friends", true)
+            }
             if (wordName == "?") {
                 listItem.onclick = function() {
                     makeNamesList(categories, canvasState, wordPerson);
+                    // Play audio C1
+                    const instruction_clip_name = '../../assets/friend_audio/C1_pick_a_name.mp3';
+                    playClip(instruction_clip_name)
                 }
                 unmasteredWordsListElement.append(listItem);
             } else {
