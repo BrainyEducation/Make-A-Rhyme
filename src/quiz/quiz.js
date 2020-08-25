@@ -8,9 +8,11 @@ var consecutive_correct = 0;
 var max_consecutive_correct = 0;
 var consecutive_incorrect = 0;
 var timedAudio;
+var prev_correct_index = -1;
 
 // Setup audio and sight word image
-var instructions_audio = new Audio('../../assets/quiz_audio/instructions/00_Three_Times_in_a_row.mp3');
+var times_in_row_audio = new Audio('../../assets/quiz_audio/instructions/00_Three_Times_in_a_row.mp3');
+var instruction_audio = new Audio('../../assets/quiz_audio/instructions/S1_Select_the_correct_word.mp3');
 var sight_word_audio_url = '../../assets/word_assets/word_audio/' + sight_word + '.mp3';
 var sight_word_audio = new Audio(sight_word_audio_url);
 var correct_audio = new Audio('../../assets/quiz_audio/praise_phrases/aa1_excellent_4b.mp3');
@@ -33,22 +35,34 @@ window.onload = function runQuiz() {
 
 // Play sight word audio when quiz starts
 function firstAudio() {
-    setTimeout(function(){ sight_word_audio.play(); }, 850);
+    setTimeout(function(){ sight_word_audio.play(); }, 300);
 }
 
-function showLearnWord() {
+function startQuiz() {
     firstAudio();
-    document.getElementById("choices").style.display = 'none';
-    document.getElementById("stars").style.display = 'none';
-    result.innerHTML = sight_word;
-    result.style.color = "black";
-    
     // After 4 seconds continue with quiz
     setTimeout(function(){
         result.innerHTML = "";
         document.getElementById("stars").style.display = 'block';
-        shuffle_btns(); 
+        shuffle_btns();
     }, 2500);
+}
+
+function showLearnWord() {
+    document.getElementById("choices").style.display = 'none';
+    document.getElementById("stars").style.display = 'none';
+    result.innerHTML = sight_word;
+    result.style.color = "black";
+
+    if (read_cookie("hasCompletedQuiz") && consecutive_incorrect == 0) {
+        startQuiz();
+    } else {
+        setTimeout(function(){ instruction_audio.play(); }, 850);
+        instruction_audio.onpause = function(){
+            startQuiz()
+        };
+    }
+
 }
 
 // Function to update the number of stars (consecutive correct guesses)
@@ -119,8 +133,15 @@ function shuffle_btns() {
 
             // Take 1st 3 words from the shuffled words then add the sight word and shuffle their order
             randomTen = randomTen.splice(0,3);
-            randomTen.push(sight_word);
             randomTen.sort(() => Math.random() - 0.5);
+
+            // Make sure correct choice does not reamin in same location
+            var correct_index = Math.floor(Math.random() * 3);
+            if (correct_index == prev_correct_index) {
+                correct_index = (correct_index + 1) % 3;
+            }
+            randomTen.splice( correct_index, 0, sight_word);
+            prev_correct_index = correct_index;
 
             // Set word for each button
             var button_ids = ["btn1", "btn2", "btn3", "btn4"];
@@ -138,8 +159,8 @@ function shuffle_btns() {
 function pauseAudio() {
     sight_word_audio.pause()
     sight_word_audio.currentTime = 0;
-    instructions_audio.pause()
-    instructions_audio.currentTime = 0;
+    times_in_row_audio.pause()
+    times_in_row_audio.currentTime = 0;
     correct_audio.pause()
     correct_audio.currentTime = 0
 }
@@ -164,7 +185,7 @@ function checkAnswer(clicked_id) {
         consecutive_incorrect = 0;
     } else {
         if (consecutive_correct != 0) {
-            instructions_audio.play();
+            times_in_row_audio.play();
             timedAudio = setTimeout(function(){ sight_word_audio.play(); }, 2200);
         } else {
             sight_word_audio.play();
@@ -181,7 +202,7 @@ function checkAnswer(clicked_id) {
     // If quiz is finished
     if (consecutive_correct >= 3) {
         // Pause audio
-        instructions_audio.pause()
+        times_in_row_audio.pause()
         sight_word_audio.pause()
         // Show Quiz Complete on screen
         result.innerHTML = "Quiz Complete!";
@@ -197,6 +218,7 @@ function checkAnswer(clicked_id) {
         // Wait few seconds and return to poem page
         setTimeout(function(){
             bake_cookie("mastered", true);
+            bake_cookie("hasCompletedQuiz", true);
             bake_cookie("reload", true);
             window.location.replace(read_cookie("quizReturn"));
         }, 2000);

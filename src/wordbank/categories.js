@@ -1,4 +1,6 @@
-// Creates category buttons 
+var instruction_audio = new Audio('../../assets/category_assets/category_audio/G1_Choose_A_Category.mp3');
+
+// Creates category buttons
 window.onload = function makeButtons() {
     let categoryList = categories;
     // console.log(categoryList.length);
@@ -32,6 +34,9 @@ window.onload = function makeButtons() {
         listItem.appendChild(imageItem);
         listContainer.appendChild(listItem);
     }
+    setTimeout(function(){
+        instruction_audio.play();
+    }, 500);
 }
 function playClip(clip_name) {
     if (navigator.appName == "Microsoft Internet Explorer" && (navigator.appVersion.indexOf("MSIE 7")!=-1) || (navigator.appVersion.indexOf("MSIE 8")!=-1)) {

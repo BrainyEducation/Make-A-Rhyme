@@ -123,6 +123,8 @@ function CanvasState(canvas) {
     this.htmlTop = html.offsetTop;
     this.htmlLeft = html.offsetLeft;
 
+    document.getElementById("completed_text").style.height = canvas.height + "px";
+
     // **** Keep track of state! ****
 
     this.valid = false; // when set to false, the canvas will redraw everything
@@ -264,7 +266,7 @@ CanvasState.prototype.selectWordWithID = function(boxID) {
                 return this.words[i];
             } else {
                 if (!this.poemComplete) {
-                    fullPoemText += (" " + this.words[i].word + " ");
+                    fullPoemText += (" <mark>" + this.words[i].word + "</mark> ");
                 }
                 txt += (" " + this.words[i].word);
                 typeWriter();
@@ -288,7 +290,7 @@ CanvasState.prototype.loadState = function() {
             } else {
                 this.addWord(new WordBox(w.x, w.y, w.w, w.h, w.fill, w.categories, w.boxID, w.word, w.completed, w.imageSrc, w.audioSrc));
                 if (w.word == read_cookie('quizWord').word) {
-                    fullPoemText += " " + w.word + " ";
+                    fullPoemText += " <mark>" + w.word + "</mark> ";
                 } 
             }
         }
@@ -407,6 +409,8 @@ function makeList(categories, canvasState) {
 
     // Get and show choices list
     let wordChoices = document.getElementById('wordChoices');
+    let completedTextElement = document.getElementById("completed_text");
+    completedTextElement.style.display = "none";
     wordChoices.style.display = 'flex';
 
     wordChoiceScrollButtonSetup();
@@ -485,16 +489,27 @@ function makeList(categories, canvasState) {
         
         // Add listItem to the listElement
         if (listData[i].category == 19) {
+            // Play child instr
+            if (!read_cookie("seen_friends")) {
+                const instruction_clip_name = '../../assets/friend_audio/B1_pick_the_child_youd_like_to_name_then_pick_a_name.mp3';
+                playClip(instruction_clip_name)
+                bake_cookie("seen_friends", true)
+            }
             if (wordName == "?") {
                 listItem.onclick = function() {
                     makeNamesList(categories, canvasState, wordPerson);
+                    // Play audio C1
+                    const instruction_clip_name = '../../assets/friend_audio/C1_pick_a_name.mp3';
+                    playClip(instruction_clip_name)
                 }
                 unmasteredWordsListElement.append(listItem);
             } else {
                 listItem.onclick = function() {
+                    wordChoices.style.display = "none";
+                    completedTextElement.style.display = "inline-block";
                     canvasState.fillWord(wordPerson, wordCat, true);
                     if (!poemCompleted) {
-                        fullPoemText += (" " + wordName + " ");
+                        fullPoemText += (" <mark>" + wordName + "</mark> ");
                         txt += (" " + wordName);
                         typeWriter();
                         playClipAndContinue(clip_name);
@@ -505,9 +520,12 @@ function makeList(categories, canvasState) {
         } else if (listData[i].learned) {
             // Mastered words
             listItem.onclick = function() {
+                wordChoices.style.display = "none";
+                completedTextElement.style.display = "inline-block";
+
                 canvasState.fillWord(wordName, wordCat, true);
                 if (!poemCompleted) {
-                    fullPoemText += (" " + wordName + " ");
+                    fullPoemText += (" <mark>" + wordName + "</mark> ");
                     txt += (" " + wordName);
                     typeWriter();
                     playClipAndContinue(clip_name);
@@ -539,6 +557,9 @@ function makeNamesList(categories, canvasState, clickedPerson) {
     // Get and show choices list
     let wordChoices = document.getElementById('wordChoices');
     wordChoices.style.display = 'flex';
+    let completedTextElement = document.getElementById("completed_text");
+    completedTextElement.style.display = "inline-block";
+
 
     // Establish the array which acts as a data source for the list
     var listData = JSON.parse(window.localStorage.getItem('friends'));
@@ -730,6 +751,10 @@ function typeWriter() {
 function readPoem() {
     playNextAudio(poemIndex + 1);
     document.getElementById("poem_text").innerHTML = "";
+    var completedTextElement = document.getElementById("completed_text");
+    completedTextElement.innerHTML = fullPoemText;
+    completedTextElement.scrollTop= completedTextElement.scrollHeight;
+
     txt = poemTextArr[poemIndex];
     typingIndex = 0;
     typeWriter();
@@ -756,7 +781,6 @@ function chooseWord(boxID, canvasState) {
 }
 
 function readBackPoem() {
-    // document.getElementById("completed_text").innerHTML += fullPoemText;
     poemIndex = 0;
     boxIndex = 0;
     readPoem();
@@ -766,6 +790,7 @@ function readBackPoem() {
 var poemName = "";
 function printPoem() {
     document.getElementById('poemTextPrint').innerText = fullPoemText;
+    document.getElementById('completed_text').style.display = "none";
     document.getElementById('poemTitlePrint').innerText = poemName;
 
     window.print();
@@ -776,6 +801,7 @@ function printPoem() {
 function init() {
     document.getElementById("print-poem").style.display = "none";
     document.getElementById("read-button").style.display = "none";
+
     var canvas = document.getElementById('canvas');
     if (!canvas) {
         window.location.reload(false);
@@ -823,7 +849,7 @@ function init() {
 
     $.when( $('#loadIndicator').fadeOut(1000))
         .done(function() {
-            document.getElementById('container').style.display = 'block';
+            document.getElementById('container').style.display = 'flex';
             document.getElementById('poem_text').style.display = 'block';
             readPoem();
         });
