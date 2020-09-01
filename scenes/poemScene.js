@@ -1,3 +1,6 @@
+const slidingDeceleration = 10000;
+const backDeceleration = 2000;
+
 class PoemScene extends Phaser.Scene {
 
     constructor() {
@@ -11,15 +14,34 @@ class PoemScene extends Phaser.Scene {
     }
 
     preload() {
-        var poemJsonData = this.game.cache.json.get('poemData');
-        var poemData = poemJsonData["poems"][this.poemName];
+        this.poemData = this.game.cache.json.get('poemData')["poems"][this.poemName];
         var i;
-        for (i = 1; i <= poemData['text'].length; i++) {
+        for (i = 1; i <= this.poemData['text'].length; i++) {
             this.load.audio(i, "assets/audio/" + this.poemName + "/" + i + ".mp3");
         }
+
+        let categorySet = new Set();
+        this.poemData['words'].forEach(word => word['categories'].forEach(category => categorySet.add(category)));
+
+        this.wordsJsonData = this.game.cache.json.get('wordsData');
+        categorySet.forEach(category => {
+            if (category == "19") return;
+            let categoryWords = this.wordsJsonData[category];
+            categoryWords.forEach(word => {
+                let wordImagePath = "assets/images/words/" + category + "/" + word + ".png";
+                this.load.image(word, wordImagePath);
+            });
+        });
+
+
+        this.load.scenePlugin({
+            key: 'rexuiplugin',
+            url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
+            sceneKey: 'rexUI'
+        });
     }
 
-    addWordPlaceholders(words, container) {
+    createWordPlaceholders(words, container) {
         let wordPlaceholderWidth = 0.1 * container.displayWidth;
         let wordPlaceholderHeight = 0.15 * container.displayHeight;
         words.forEach(word => this.addWordPlaceholder(word, container, wordPlaceholderWidth, wordPlaceholderHeight));
@@ -39,12 +61,13 @@ class PoemScene extends Phaser.Scene {
         container.add(rect);
 
         // Save for easy access
-        this.wordSpots[word['spot-id']] = rect;
+        this.wordSpots[word['spot-id']] = {container: container, image: rect, categories: word["categories"]};
     }
 
     typewritePoemText(text) {
-        this.poemTextElement.setText('')
-
+        this.poemTextElement.setText('');
+        let audioDuration = this.sound.get(this.poemLocation + 1).duration * 1000;
+        let delay = audioDuration / text.length;
         let i = 0
         this.time.addEvent({
             callback: () => {
@@ -52,18 +75,138 @@ class PoemScene extends Phaser.Scene {
                 ++i
             },
             repeat: text.length - 1,
-            delay: 75
+            delay: delay
         })
     }
 
-    playPoem(poemText) {
-        this.typewritePoemText(poemText[this.poemLocation]);
+    createWordChoiceList(cueBox) {
+        var words = [];
+        this.wordSpots[cueBox].categories.forEach(category => this.wordsJsonData[category].forEach(word => words.push(word)));
+
+        var gridTable = this.rexUI.add.gridTable({
+            x: this.cameras.main.displayWidth - 110,
+            y: this.cameras.main.centerY,
+            width: 220,
+            height: 420,
+
+            scrollMode: 0,
+
+            background: this.rexUI.add.roundRectangle(0, 0, 20, 10, 10, 0xbbbbbb),
+
+            table: {
+                cellWidth: undefined,
+                cellHeight: 150,
+
+                columns: 1,
+
+                mask: {
+                    padding: 2,
+                },
+
+                reuseCellContainer: false,
+            },
+
+            slider: {
+                track: this.rexUI.add.roundRectangle(0, 0, 20, 10, 10, 0x555555),
+                thumb: this.rexUI.add.roundRectangle(0, 0, 0, 0, 13, 0xdddddd),
+            },
+
+            space: {
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: 20,
+
+                table: 10,
+                header: 10,
+                footer: 10,
+            },
+
+            createCellContainerCallback: function (cell, cellContainer) {
+                var scene = cell.scene,
+                    width = cell.width,
+                    height = cell.height,
+                    item = cell.item,
+                    index = cell.index;
+
+                if (item.removed) {
+                    return null;
+                }
+                if (cellContainer === null) {
+                    cellContainer = scene.rexUI.add.label({
+                        width: width,
+                        height: height,
+
+                        orientation: 0,
+                        background: scene.rexUI.add.roundRectangle(0, 0, 20, 20, 0).setStrokeStyle(2, 0x737373),
+                        icon: scene.add.image(width / 2, 0, item),
+                        align: 'center',
+
+                        space: {
+
+                        }
+                    });
+                }
+
+                cellContainer.item = item;
+                cellContainer.setAlpha(1);
+                // Set properties from item value
+                cellContainer.setMinSize(width, height); // Size might changed in this demo
+                let icon = cellContainer.getElement('icon');
+                icon.displayWidth = 100;
+                icon.scaleY = icon.scaleX;
+                icon.setOrigin(0.5, 0.5);
+
+                cellContainer.getElement('background').setStrokeStyle(2, 0x333333).setDepth(0);
+                return cellContainer;
+            },
+            items: words
+        })
+            .layout()
+
+
+        var scene = this;
+        gridTable
+            .on('cell.over', function (cellContainer, cellIndex) {
+                cellContainer.getElement('background')
+                    .setStrokeStyle(2, 0xeeeeee)
+                    .setDepth(1);
+            }, this)
+            .on('cell.out', function (cellContainer, cellIndex) {
+                cellContainer.getElement('background')
+                    .setStrokeStyle(2, 0x333333)
+                    .setDepth(0);
+            }, this)
+            .on('cell.click', function (cellContainer, cellIndex) {
+                let placeholder = this.wordSpots[cueBox].image;
+                let container = this.wordSpots[cueBox].container;
+
+                var image = this.add.image(placeholder.x, placeholder.y, cellContainer.item);
+                image.setOrigin(0, 0);
+                image.displayWidth = placeholder.displayWidth;
+                image.scaleY = image.scaleX;
+
+
+                container.replace(placeholder, image);
+                // console.log(gridTable);
+                this.playNextLine();
+            }, this)
+    }
+
+    playNextLine() {
         this.sound.play(this.poemLocation + 1);
-        this.poemLocation += 1;
+        let lineAudio = this.sound.get(this.poemLocation + 1);
+        lineAudio.scene = this;
+        lineAudio.once('complete', function() {
+            this.scene.createWordChoiceList(this.scene.poemData["cueBox"][this.scene.poemLocation]);
+            this.scene.poemLocation += 1;
+        });
+
+        this.typewritePoemText(this.poemData["text"][this.poemLocation]);
+
     }
 
     create() {
-        console.log(this.poemName);
 
         // Poem background
         var poemImg = this.add.sprite(0, 0, this.poemName);
@@ -86,15 +229,12 @@ class PoemScene extends Phaser.Scene {
         this.poemTextElement.setFontSize(25);
         this.poemTextElement.setAlign('center');
         this.poemTextElement.setColor('#000000');
-        // poemTextElement.setBackgroundColor('#C2EAE9');
+        this.poemTextElement.setWordWrapWidth(this.cameras.main.width - 100);
         this.poemTextElement.setPadding(10, 0, 10, 0);
 
-        var poemJsonData = this.game.cache.json.get('poemData');
-        var poemData = poemJsonData["poems"][this.poemName];
-        this.addWordPlaceholders(poemData['words'], container);
+        this.createWordPlaceholders(this.poemData['words'], container);
 
-        this.playPoem(poemData['text']);
-
+        this.playNextLine();
     }
 }
 export default PoemScene;

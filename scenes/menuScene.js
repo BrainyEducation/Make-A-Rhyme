@@ -10,9 +10,8 @@ class MenuScene extends Phaser.Scene {
     }
 
     preload() {
-        var poemJsonData = this.game.cache.json.get('poemData');
-        var poems = poemJsonData["poems"];
-
+        this.poemJsonData = this.game.cache.json.get('poemData');
+        let poems = this.poemJsonData["poems"]
         Object.keys(poems).forEach(poemKey => this.loadPoemAssets(poems[poemKey]));
     }
 
@@ -49,9 +48,7 @@ class MenuScene extends Phaser.Scene {
         titleText.setOrigin(0.5, 0.5);
         titleText.setColor("#ecf8f9");
 
-        var poemJsonData = this.game.cache.json.get('poemData');
-        var poems = poemJsonData["poems"];
-
+        var poems = this.poemJsonData["poems"];
         Object.keys(poems).forEach((poemKey, count) => this.addPoem(poems[poemKey], count));
     }
 

@@ -4,7 +4,8 @@ class PreloadScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.json('poemData', './assets/poem_data.json');
+        this.load.json('poemData', './assets/data/poem_data.json');
+        this.load.json('wordsData', './assets/data/words_data.json');
         this.load.on('complete', this.complete, {scene:this.scene});
     }
 
