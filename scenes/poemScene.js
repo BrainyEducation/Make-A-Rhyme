@@ -61,7 +61,7 @@ class PoemScene extends Phaser.Scene {
         container.add(rect);
 
         // Save for easy access
-        this.wordSpots[word['spot-id']] = {container: container, image: rect, categories: word["categories"]};
+        this.wordSpots[word['spot-id']] = {assigned: false, container: container, image: rect, categories: word["categories"]};
     }
 
     typewritePoemText(text) {
@@ -188,7 +188,8 @@ class PoemScene extends Phaser.Scene {
 
 
                 container.replace(placeholder, image);
-                // console.log(gridTable);
+                this.wordSpots[cueBox].assigned = true;
+                scene.rexUI.hide(gridTable);
                 this.playNextLine();
             }, this)
     }
@@ -196,13 +197,20 @@ class PoemScene extends Phaser.Scene {
     playNextLine() {
         this.sound.play(this.poemLocation + 1);
         let lineAudio = this.sound.get(this.poemLocation + 1);
+        this.typewritePoemText(this.poemData["text"][this.poemLocation]);
+
         lineAudio.scene = this;
         lineAudio.once('complete', function() {
-            this.scene.createWordChoiceList(this.scene.poemData["cueBox"][this.scene.poemLocation]);
-            this.scene.poemLocation += 1;
+            let cue = this.scene.poemData["cueBox"][this.scene.poemLocation];
+            if (this.scene.wordSpots[cue].assigned) {
+                this.scene.poemLocation += 1;
+                this.scene.playNextLine();
+            } else {
+                this.scene.createWordChoiceList(cue);
+                this.scene.poemLocation += 1;
+            }
         });
 
-        this.typewritePoemText(this.poemData["text"][this.poemLocation]);
 
     }
 
