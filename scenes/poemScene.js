@@ -30,6 +30,9 @@ class PoemScene extends Phaser.Scene {
             categoryWords.forEach(word => {
                 let wordImagePath = "assets/images/words/" + category + "/" + word + ".png";
                 this.load.image(word, wordImagePath);
+
+                let wordAudioPath = "assets/audio/words/" + word + ".mp3";
+                this.load.audio(word, wordAudioPath);
             });
         });
 
@@ -61,7 +64,7 @@ class PoemScene extends Phaser.Scene {
         container.add(rect);
 
         // Save for easy access
-        this.wordSpots[word['spot-id']] = {assigned: false, container: container, image: rect, categories: word["categories"]};
+        this.wordSpots[word['spot-id']] = {assigned: false, word: null, container: container, image: rect, categories: word["categories"]};
     }
 
     typewritePoemText(text) {
@@ -77,6 +80,29 @@ class PoemScene extends Phaser.Scene {
             repeat: text.length - 1,
             delay: delay
         })
+    }
+
+    typewriteWordChoice(text) {
+        let audioDuration = 1000;
+        try {
+            audioDuration = this.sound.get(text).duration * 1000
+        } catch (e) {
+            console.log(e);
+        }
+
+        text = " " + text;
+        let delay = audioDuration / text.length;
+        let i = 0
+        this.time.addEvent({
+            callback: () => {
+                this.poemTextElement.text += text[i]
+                ++i
+            },
+            repeat: text.length - 1,
+            delay: delay
+        })
+
+        this.time.delayedCall(audioDuration + 1000, this.playNextLine, [], this);;
     }
 
     createWordChoiceList(cueBox) {
@@ -171,6 +197,7 @@ class PoemScene extends Phaser.Scene {
                 cellContainer.getElement('background')
                     .setStrokeStyle(2, 0xeeeeee)
                     .setDepth(1);
+                this.sound.play(cellContainer.item);
             }, this)
             .on('cell.out', function (cellContainer, cellIndex) {
                 cellContainer.getElement('background')
@@ -188,9 +215,10 @@ class PoemScene extends Phaser.Scene {
 
 
                 container.replace(placeholder, image);
+                this.typewriteWordChoice(cellContainer.item);
                 this.wordSpots[cueBox].assigned = true;
+                this.wordSpots[cueBox].word = cellContainer.item;
                 scene.rexUI.hide(gridTable);
-                this.playNextLine();
             }, this)
     }
 
@@ -204,7 +232,7 @@ class PoemScene extends Phaser.Scene {
             let cue = this.scene.poemData["cueBox"][this.scene.poemLocation];
             if (this.scene.wordSpots[cue].assigned) {
                 this.scene.poemLocation += 1;
-                this.scene.playNextLine();
+                this.scene.typewriteWordChoice(this.scene.wordSpots[cue].word);
             } else {
                 this.scene.createWordChoiceList(cue);
                 this.scene.poemLocation += 1;
