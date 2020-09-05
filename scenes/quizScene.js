@@ -6,6 +6,8 @@ class QuizScene extends Phaser.Scene {
 
     init(data){
         this.quizWord = data.quizWord;
+        this.correct = 0;
+        this.incorrect = 0;
     }
 
     preload() {
@@ -24,13 +26,21 @@ class QuizScene extends Phaser.Scene {
         quizImg.displayWidth = this.cameras.main.width * 0.25;
         quizImg.scaleY = quizImg.scaleX;
 
+        var answerChoices = [];
+        answerChoices.push(this.quizWord);
+
+        var i;
+        for (i = 0; i < 3; i++) {
+            answerChoices.push(this.wordsJsonData[i + 1][i]);
+        }
+
         this.rexUI.add.gridButtons({
             width: this.cameras.main.width / 2, height: 400,
             anchor: {centerX: "center", bottom: "bottom"},
 
             buttons: [
-                [this.createButton("A"), this.createButton("B")],
-                [this.createButton("C"), this.createButton("D")],
+                [this.createButton(answerChoices[0]), this.createButton(answerChoices[1])],
+                [this.createButton(answerChoices[2]), this.createButton(answerChoices[3])],
 
             ],
             space: {
@@ -40,9 +50,33 @@ class QuizScene extends Phaser.Scene {
         })
             .layout()
             .on('button.click', function (button, index, pointer, event) {
-                console.log(`Click button-${button.text}`);
+                console.log(button.text);
+                let scene = button.scene;
+                scene.checkAnswer(button.text);
             })
 
+    }
+
+    checkAnswer(answer) {
+        if (answer == this.quizWord) {
+            // Correct
+            this.correct += 1;
+            this.incorrect = 0;
+        } else {
+            // Wrong
+            this.incorrect += 1;
+            this.correct = 0;
+        }
+
+        if (this.correct == 3) {
+            // Finish quiz
+            console.log("Quiz Completed!");
+            this.scene.start("poemScene");
+        } else if (this.incorrect >= 3) {
+            // Play instruction
+        } else {
+            // continue
+        }
     }
 
     createButton(text) {
