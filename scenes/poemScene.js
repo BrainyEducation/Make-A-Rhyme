@@ -184,6 +184,13 @@ class PoemScene extends Phaser.Scene {
                 icon.setOrigin(0.5, 0.5);
 
                 cellContainer.getElement('background').setStrokeStyle(2, 0x333333).setDepth(0);
+                var masteredWords = JSON.parse(localStorage.getItem("masteredWords"));
+                if (!masteredWords[cellContainer.item]) {
+                    icon.setPipeline('Grayscale');
+                    cellContainer.mastered = false;
+                } else {
+                    cellContainer.mastered = true;
+                }
                 return cellContainer;
             },
             items: words
@@ -205,20 +212,25 @@ class PoemScene extends Phaser.Scene {
                     .setDepth(0);
             }, this)
             .on('cell.click', function (cellContainer, cellIndex) {
-                let placeholder = this.wordSpots[cueBox].image;
-                let container = this.wordSpots[cueBox].container;
+                if (cellContainer.mastered) {
+                    let placeholder = this.wordSpots[cueBox].image;
+                    let container = this.wordSpots[cueBox].container;
 
-                var image = this.add.image(placeholder.x, placeholder.y, cellContainer.item);
-                image.setOrigin(0, 0);
-                image.displayWidth = placeholder.displayWidth;
-                image.scaleY = image.scaleX;
+                    var image = this.add.image(placeholder.x, placeholder.y, cellContainer.item);
+                    image.setOrigin(0, 0);
+                    image.displayWidth = placeholder.displayWidth;
+                    image.scaleY = image.scaleX;
 
 
-                container.replace(placeholder, image);
-                this.typewriteWordChoice(cellContainer.item);
-                this.wordSpots[cueBox].assigned = true;
-                this.wordSpots[cueBox].word = cellContainer.item;
-                scene.rexUI.hide(gridTable);
+                    container.replace(placeholder, image);
+                    this.typewriteWordChoice(cellContainer.item);
+                    this.wordSpots[cueBox].assigned = true;
+                    this.wordSpots[cueBox].word = cellContainer.item;
+                    scene.rexUI.hide(gridTable);
+                } else {
+                    // Go to quiz
+                }
+
             }, this)
     }
 
