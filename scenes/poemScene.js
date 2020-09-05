@@ -107,7 +107,7 @@ class PoemScene extends Phaser.Scene {
 
     createWordChoiceList(cueBox) {
         var words = [];
-        this.wordSpots[cueBox].categories.forEach(category => this.wordsJsonData[category].forEach(word => words.push(word)));
+        this.wordSpots[cueBox].categories.forEach(category => this.wordsJsonData[category].forEach(word => words.push({word: word, category: category})));
 
         var gridTable = this.rexUI.add.gridTable({
             x: this.cameras.main.displayWidth - 110,
@@ -165,7 +165,7 @@ class PoemScene extends Phaser.Scene {
 
                         orientation: 0,
                         background: scene.rexUI.add.roundRectangle(0, 0, 20, 20, 0).setStrokeStyle(2, 0x737373),
-                        icon: scene.add.image(width / 2, 0, item),
+                        icon: scene.add.image(width / 2, 0, item.word),
                         align: 'center',
 
                         space: {
@@ -174,7 +174,8 @@ class PoemScene extends Phaser.Scene {
                     });
                 }
 
-                cellContainer.item = item;
+                cellContainer.item = item.word;
+                cellContainer.category = item.category;
                 cellContainer.setAlpha(1);
                 // Set properties from item value
                 cellContainer.setMinSize(width, height); // Size might changed in this demo
@@ -228,7 +229,14 @@ class PoemScene extends Phaser.Scene {
                     this.wordSpots[cueBox].word = cellContainer.item;
                     scene.rexUI.hide(gridTable);
                 } else {
-                    // Go to quiz
+                    if (cellContainer.category == 19) {
+                        // Name friend
+                        this.typewriteWordChoice(cellContainer.item);
+                        scene.rexUI.hide(gridTable);
+                    } else {
+                        // Go to quiz
+                        this.scene.start("quizScene", {quizWord: cellContainer.item});
+                    }
                 }
 
             }, this)

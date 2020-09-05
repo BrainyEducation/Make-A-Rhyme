@@ -1,11 +1,13 @@
 import PreloadScene from "./scenes/preloadScene.js";
 import MenuScene from "./scenes/menuScene.js";
 import PoemScene from "./scenes/poemScene.js";
+import QuizScene from "./scenes/quizScene.js";
 
 // Our game scene
 let preloadScene = new PreloadScene();
 let menuScene = new MenuScene();
 let poemScene = new PoemScene();
+let quizScene = new QuizScene();
 
 var config = {
     type: Phaser.AUTO,
@@ -26,6 +28,7 @@ var game = new Phaser.Game(config);
 game.scene.add("preloadScene", preloadScene);
 game.scene.add("menuScene", menuScene);
 game.scene.add("poemScene", poemScene);
+game.scene.add("quizScene", quizScene);
 
 game.scene.start("preloadScene");
 
