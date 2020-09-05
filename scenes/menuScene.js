@@ -20,17 +20,22 @@ class MenuScene extends Phaser.Scene {
         var poemName = poemJson["name"].toLowerCase().split(" ").join("-");
         let poemImgWidth = this.cameras.main.width * .25;
         let poemImgPadding = (this.cameras.main.width - poemImgWidth * 3) / 4;
-        var poemImg = this.add.image(poemImgPadding + (poemImgWidth + poemImgPadding) * count, 100, poemName);
+        var poemImg = this.add.image(poemImgPadding + (poemImgWidth + poemImgPadding) * count + poemImgWidth/2, 100, poemName);
         poemImg.displayWidth = poemImgWidth;
         poemImg.scaleY = poemImg.scaleX;
-        poemImg.setOrigin(0, 0);
+        let origiScale = poemImg.scaleX;
+        poemImg.setOrigin(0.5, 0);
         poemImg.setInteractive();
 
         var poemAudio = this.sound.add(poemName);
 
-        poemImg.on('pointerover', function () {
+        poemImg
+            .on('pointerover', function () {
             this.scene.game.sound.stopAll();
+            poemImg.setScale(poemImg.scaleX * 1.1, poemImg.scaleY * 1.1);
             poemAudio.play();
+        }).on('pointerout', function () {
+            poemImg.setScale(origiScale, origiScale);
         });
 
         poemImg.on('pointerdown', function () {
