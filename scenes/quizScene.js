@@ -6,6 +6,7 @@ class QuizScene extends Phaser.Scene {
 
     init(data){
         this.quizWord = data.quizWord;
+
         this.correct = 0;
         this.incorrect = 0;
     }
@@ -71,7 +72,11 @@ class QuizScene extends Phaser.Scene {
         if (this.correct == 3) {
             // Finish quiz
             console.log("Quiz Completed!");
-            this.scene.start("poemScene");
+            var masteredWords = JSON.parse(localStorage.getItem("masteredWords"));
+            masteredWords[this.quizWord] = true;
+            localStorage.setItem("masteredWords", JSON.stringify(masteredWords));
+            this.scene.wake("poemScene");
+            this.scene.stop("quizScene");
         } else if (this.incorrect >= 3) {
             // Play instruction
         } else {

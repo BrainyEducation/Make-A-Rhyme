@@ -105,6 +105,22 @@ class PoemScene extends Phaser.Scene {
         this.time.delayedCall(audioDuration + 1000, this.playNextLine, [], this);;
     }
 
+    insertWordChoice(cueBox, cellContainer) {
+        let placeholder = this.wordSpots[cueBox].image;
+        let container = this.wordSpots[cueBox].container;
+
+        var image = this.add.image(placeholder.x, placeholder.y, cellContainer.item);
+        image.setOrigin(0, 0);
+        image.displayWidth = placeholder.displayWidth;
+        image.scaleY = image.scaleX;
+
+
+        container.replace(placeholder, image);
+        this.typewriteWordChoice(cellContainer.item);
+        this.wordSpots[cueBox].assigned = true;
+        this.wordSpots[cueBox].word = cellContainer.item;
+    }
+
     createWordChoiceList(cueBox) {
         var words = [];
         this.wordSpots[cueBox].categories.forEach(category => this.wordsJsonData[category].forEach(word => words.push({word: word, category: category})));
@@ -214,30 +230,19 @@ class PoemScene extends Phaser.Scene {
             }, this)
             .on('cell.click', function (cellContainer, cellIndex) {
                 if (cellContainer.mastered) {
-                    let placeholder = this.wordSpots[cueBox].image;
-                    let container = this.wordSpots[cueBox].container;
-
-                    var image = this.add.image(placeholder.x, placeholder.y, cellContainer.item);
-                    image.setOrigin(0, 0);
-                    image.displayWidth = placeholder.displayWidth;
-                    image.scaleY = image.scaleX;
-
-
-                    container.replace(placeholder, image);
-                    this.typewriteWordChoice(cellContainer.item);
-                    this.wordSpots[cueBox].assigned = true;
-                    this.wordSpots[cueBox].word = cellContainer.item;
-                    scene.rexUI.hide(gridTable);
+                    this.insertWordChoice(cueBox, cellContainer);
                 } else {
                     if (cellContainer.category == 19) {
                         // Name friend
                         this.typewriteWordChoice(cellContainer.item);
-                        scene.rexUI.hide(gridTable);
                     } else {
                         // Go to quiz
-                        this.scene.start("quizScene", {quizWord: cellContainer.item});
+                        this.scene.run("quizScene", {quizWord: cellContainer.item});
+                        this.scene.sleep("poemScene");
+                        this.insertWordChoice(cueBox, cellContainer);
                     }
                 }
+                this.rexUI.hide(gridTable);
 
             }, this)
     }
