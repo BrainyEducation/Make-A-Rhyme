@@ -125,7 +125,7 @@ class PoemScene extends Phaser.Scene {
         var words = [];
         this.wordSpots[cueBox].categories.forEach(category => this.wordsJsonData[category].forEach(word => words.push({word: word, category: category})));
 
-        var gridTable = this.rexUI.add.gridTable({
+        this.wordChoiceList = this.rexUI.add.gridTable({
             x: this.cameras.main.displayWidth - 110,
             y: this.cameras.main.centerY,
             width: 220,
@@ -133,7 +133,7 @@ class PoemScene extends Phaser.Scene {
 
             scrollMode: 0,
 
-            background: this.rexUI.add.roundRectangle(0, 0, 20, 10, 10, 0xbbbbbb),
+            background: this.rexUI.add.roundRectangle(0, 0, 20, 10, 10, 0xE58F65),
 
             table: {
                 cellWidth: undefined,
@@ -148,10 +148,14 @@ class PoemScene extends Phaser.Scene {
                 reuseCellContainer: false,
             },
 
-            slider: {
-                track: this.rexUI.add.roundRectangle(0, 0, 20, 10, 10, 0x555555),
-                thumb: this.rexUI.add.roundRectangle(0, 0, 0, 0, 13, 0xdddddd),
+            scroller: {
+                threshold: 10,
+                slidingDeceleration: 5000,
+                backDeceleration: 2000,
             },
+
+            header: this.add.triangle(100, 50, 0, 50, 50, 50, 25, 0, 0x999999),
+            footer: this.add.triangle(100, 50, 0, 0, 50, 0, 25, 50, 0x999999),
 
             space: {
                 left: 20,
@@ -214,9 +218,7 @@ class PoemScene extends Phaser.Scene {
         })
             .layout()
 
-
-        var scene = this;
-        gridTable
+        this.wordChoiceList
             .on('cell.over', function (cellContainer, cellIndex) {
                 cellContainer.getElement('background')
                     .setStrokeStyle(2, 0xeeeeee)
@@ -242,9 +244,53 @@ class PoemScene extends Phaser.Scene {
                         this.insertWordChoice(cueBox, cellContainer);
                     }
                 }
-                this.rexUI.hide(gridTable);
+                this.rexUI.hide(this.wordChoiceList);
 
             }, this)
+
+        this.wordChoiceList.childrenMap['header'].setInteractive()
+            .on('pointerover', function () {
+                this.scene.addScrollUp(this);
+            })
+            .on('pointerout', function () {
+                this.scrollUpTween.remove();
+            })
+
+        this.wordChoiceList.childrenMap['footer'].setInteractive()
+            .on('pointerover', function () {
+                this.scene.addScrollDown(this);
+            })
+            .on('pointerout', function () {
+                this.scrollDownTween.remove();
+            })
+    }
+
+    addScrollDown(footer) {
+        let scroller = this.wordChoiceList.childrenMap['scroller'];
+        let scrollSpeed = 200;
+        let duration = (scroller._value - scroller.minValue) / scrollSpeed * 1000;
+        footer.scrollDownTween = this.tweens.add({
+            targets: this.wordChoiceList,
+            t: 1,
+            ease: 'Linear',
+            duration: duration,
+            repeat: 0,
+            yoyo: false,
+        });
+    }
+
+    addScrollUp(header) {
+        let scroller = this.wordChoiceList.childrenMap['scroller'];
+        let scrollSpeed = 200;
+        let duration = -scroller._value / scrollSpeed * 1000;
+        header.scrollUpTween = this.tweens.add({
+            targets: this.wordChoiceList,
+            t: 0,
+            ease: 'Linear',
+            duration: duration,
+            repeat: 0,
+            yoyo: false,
+        });
     }
 
     playNextLine() {
