@@ -45,8 +45,8 @@ class MenuScene extends Phaser.Scene {
 
     create() {
         var titleStyle = {
-            font: "50px Comic Sans MS",
-            fontFamily: "cursive, sans-serif",
+            fontFamily: 'Comic Sans MS, cursive, sans-serif',
+            fontSize: 50,
             color: "#ecf8f9",
         };
         var titleText = this.add.text(this.cameras.main.centerX, 50, "Rhymes", titleStyle);
