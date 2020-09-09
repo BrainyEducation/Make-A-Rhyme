@@ -121,15 +121,23 @@ class PoemScene extends Phaser.Scene {
         this.wordSpots[cueBox].word = cellContainer.item;
     }
 
-    createWordChoiceList(cueBox) {
+    showWordChoicesFor(cueBox) {
         var words = [];
         this.wordSpots[cueBox].categories.forEach(category => this.wordsJsonData[category].forEach(word => words.push({word: word, category: category})));
+        this.wordChoiceList.setItems(words);
+        this.wordChoiceList.scrollToTop();
+        this.wordChoiceList.cueBox = cueBox;
+        this.rexUI.show(this.wordChoiceList);
+
+    }
+
+    createWordChoiceList() {
 
         this.wordChoiceList = this.rexUI.add.gridTable({
             x: this.cameras.main.displayWidth - 110,
             y: this.cameras.main.centerY,
             width: 220,
-            height: 420,
+            height: 0.8 * this.cameras.main.displayHeight,
 
             scrollMode: 0,
 
@@ -214,9 +222,11 @@ class PoemScene extends Phaser.Scene {
                 }
                 return cellContainer;
             },
-            items: words
+            items: []
         })
-            .layout()
+            .layout();
+
+        this.rexUI.hide(this.wordChoiceList);
 
         this.wordChoiceList
             .on('cell.over', function (cellContainer, cellIndex) {
@@ -232,7 +242,7 @@ class PoemScene extends Phaser.Scene {
             }, this)
             .on('cell.click', function (cellContainer, cellIndex) {
                 if (cellContainer.mastered) {
-                    this.insertWordChoice(cueBox, cellContainer);
+                    this.insertWordChoice(this.wordChoiceList.cueBox, cellContainer);
                 } else {
                     if (cellContainer.category == 19) {
                         // Name friend
@@ -241,11 +251,10 @@ class PoemScene extends Phaser.Scene {
                         // Go to quiz
                         this.scene.run("quizScene", {quizWord: cellContainer.item});
                         this.scene.sleep("poemScene");
-                        this.insertWordChoice(cueBox, cellContainer);
+                        this.insertWordChoice(this.wordChoiceList.cueBox, cellContainer);
                     }
                 }
                 this.rexUI.hide(this.wordChoiceList);
-
             }, this)
 
         this.wordChoiceList.childrenMap['header'].setInteractive()
@@ -305,12 +314,10 @@ class PoemScene extends Phaser.Scene {
                 this.scene.poemLocation += 1;
                 this.scene.typewriteWordChoice(this.scene.wordSpots[cue].word);
             } else {
-                this.scene.createWordChoiceList(cue);
+                this.scene.showWordChoicesFor(cue);
                 this.scene.poemLocation += 1;
             }
         });
-
-
     }
 
     create() {
@@ -340,6 +347,8 @@ class PoemScene extends Phaser.Scene {
         this.poemTextElement.setPadding(10, 0, 10, 0);
 
         this.createWordPlaceholders(this.poemData['words'], container);
+
+        this.createWordChoiceList();
 
         this.playNextLine();
     }
