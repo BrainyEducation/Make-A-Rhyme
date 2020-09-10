@@ -37,8 +37,12 @@ class QuizScene extends Phaser.Scene {
     }
 
     create() {
+        let sidebarSize = 100;
+        this.cameras.main.setViewport(sidebarSize, 0, this.cameras.main.width - sidebarSize, this.cameras.main.height);
+
+
         // Quiz image
-        var quizImg = this.add.sprite(this.cameras.main.centerX, this.cameras.main.width / 9 + 20, this.quizWord);
+        var quizImg = this.add.sprite(this.cameras.main.width / 2, this.cameras.main.width / 9 + 20, this.quizWord);
         quizImg.setOrigin(0.5, 0);
         quizImg.displayWidth = this.cameras.main.width * 0.25;
         quizImg.scaleY = quizImg.scaleX;
@@ -74,7 +78,6 @@ class QuizScene extends Phaser.Scene {
         if (!sessionStorage.getItem("hasCompletedQuiz")) {
             this.sound.play("quiz-instructions");
         }
-
     }
 
     createStars() {
@@ -82,7 +85,7 @@ class QuizScene extends Phaser.Scene {
 
         //  Stars container
         if (this.stars) this.stars.destroy();
-        this.stars = this.add.container(this.cameras.main.centerX, starSize / 2 + 10);
+        this.stars = this.add.container(this.cameras.main.width / 2, starSize / 2 + 10);
         this.stars.setSize(this.cameras.main.width / 3, 3 * 1.1 * starSize);
 
         var i;
@@ -208,7 +211,6 @@ class QuizScene extends Phaser.Scene {
             align: 'center'
         });
     }
-
 
 }
 export default QuizScene;

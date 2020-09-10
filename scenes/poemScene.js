@@ -36,12 +36,16 @@ class PoemScene extends Phaser.Scene {
             });
         });
 
+        this.masteredWords = JSON.parse(localStorage.getItem("masteredWords"));
+
 
         this.load.scenePlugin({
             key: 'rexuiplugin',
             url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
             sceneKey: 'rexUI'
         });
+        this.load.plugin('rexgrayscalepipelineplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexgrayscalepipelineplugin.min.js', true);
+
     }
 
     createWordPlaceholders(words, container) {
@@ -123,18 +127,18 @@ class PoemScene extends Phaser.Scene {
 
     showWordChoicesFor(cueBox) {
         var words = [];
+        this.masteredWords = JSON.parse(localStorage.getItem("masteredWords"));
         this.wordSpots[cueBox].categories.forEach(category => this.wordsJsonData[category].forEach(word => words.push({word: word, category: category})));
         this.wordChoiceList.setItems(words);
         this.wordChoiceList.scrollToTop();
         this.wordChoiceList.cueBox = cueBox;
         this.rexUI.show(this.wordChoiceList);
-
     }
 
     createWordChoiceList() {
 
         this.wordChoiceList = this.rexUI.add.gridTable({
-            x: this.cameras.main.displayWidth - 110,
+            x: this.cameras.main.displayWidth - 120,
             y: this.cameras.main.centerY,
             width: 220,
             height: 0.8 * this.cameras.main.displayHeight,
@@ -183,43 +187,40 @@ class PoemScene extends Phaser.Scene {
                     item = cell.item,
                     index = cell.index;
 
+                var icon = scene.add.image(width / 2, 0, item.word);
+                icon.displayWidth = 100;
+                icon.scaleY = icon.scaleX;
+                icon.setOrigin(0.5, 0.5);
+
                 if (item.removed) {
                     return null;
                 }
-                if (cellContainer === null) {
-                    cellContainer = scene.rexUI.add.label({
-                        width: width,
-                        height: height,
+                cellContainer = scene.rexUI.add.label({
+                    width: width,
+                    height: height,
+                    orientation: 0,
+                    background: scene.rexUI.add.roundRectangle(0, 0, 20, 20, 0).setStrokeStyle(2, 0x737373),
+                    icon: icon,
+                    align: 'center'
+                });
 
-                        orientation: 0,
-                        background: scene.rexUI.add.roundRectangle(0, 0, 20, 20, 0).setStrokeStyle(2, 0x737373),
-                        icon: scene.add.image(width / 2, 0, item.word),
-                        align: 'center',
-
-                        space: {
-
-                        }
-                    });
-                }
 
                 cellContainer.item = item.word;
                 cellContainer.category = item.category;
                 cellContainer.setAlpha(1);
                 // Set properties from item value
                 cellContainer.setMinSize(width, height); // Size might changed in this demo
-                let icon = cellContainer.getElement('icon');
-                icon.displayWidth = 100;
-                icon.scaleY = icon.scaleX;
-                icon.setOrigin(0.5, 0.5);
 
                 cellContainer.getElement('background').setStrokeStyle(2, 0x333333).setDepth(0);
-                var masteredWords = JSON.parse(localStorage.getItem("masteredWords"));
-                if (!masteredWords[cellContainer.item]) {
-                    icon.setPipeline('Grayscale');
+
+                if (!scene.masteredWords[item.word]) {
+                    icon.setPipeline('GrayScale');
                     cellContainer.mastered = false;
                 } else {
                     cellContainer.mastered = true;
                 }
+
+
                 return cellContainer;
             },
             items: []
@@ -321,6 +322,17 @@ class PoemScene extends Phaser.Scene {
     }
 
     create() {
+        let sidebarSize = 100;
+        this.cameras.main.setViewport(sidebarSize, 0, this.cameras.main.width - sidebarSize, this.cameras.main.height);
+        console.log(this.cameras.main);
+
+        this.grayscalePipeline = this.plugins.get('rexgrayscalepipelineplugin').add(this, "GrayScale", {
+            intensity: 1
+        });
+
+        this.grayscalePipeline.setInt1('resolution', 2);
+        console.log(this.grayscalePipeline);
+
 
         // Poem background
         var poemImg = this.add.sprite(0, 0, this.poemName);
@@ -329,12 +341,12 @@ class PoemScene extends Phaser.Scene {
         poemImg.scaleY = poemImg.scaleX;
 
         //  Poem container
-        var container = this.add.container(this.cameras.main.centerX, this.cameras.main.centerY);
+        var container = this.add.container(poemImg.displayWidth / 2 + 20, this.cameras.main.centerY);
         container.setSize(poemImg.displayWidth, poemImg.displayHeight);
         container.add(poemImg);
 
         // Poem text
-        let textX = this.cameras.main.centerX;
+        let textX = this.cameras.main.width / 2;
         let textY = this.cameras.main.height - 100;
         this.poemTextElement = this.add.text(textX, textY);
         this.poemTextElement.setOrigin(0.5, 0.5);
