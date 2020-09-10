@@ -14,7 +14,7 @@ class MenuScene extends Phaser.Scene {
 
     preload() {
         this.poemJsonData = this.game.cache.json.get('poemData');
-        let poems = this.poemJsonData["poems"]
+        let poems = this.poemJsonData["poems"];
         Object.keys(poems).forEach(poemKey => this.loadPoemAssets(poems[poemKey]));
     }
 
@@ -22,12 +22,24 @@ class MenuScene extends Phaser.Scene {
         var poemName = poemJson["name"].toLowerCase().split(" ").join("-");
         let poemImgWidth = this.cameras.main.width * .25;
         let poemImgPadding = (this.cameras.main.width - poemImgWidth * 3) / 4;
-        var poemImg = this.add.image(poemImgPadding + (poemImgWidth + poemImgPadding) * count + poemImgWidth/2, 120, poemName);
+        let poemX = poemImgPadding + (poemImgWidth + poemImgPadding) * count + poemImgWidth/2;
+        let poemY = 120;
+
+        var poemImg = this.add.sprite(poemX, poemY, poemName);
         poemImg.displayWidth = poemImgWidth;
         poemImg.scaleY = poemImg.scaleX;
         let origiScale = poemImg.scaleX;
         poemImg.setOrigin(0.5, 0);
         poemImg.setInteractive();
+
+        // Make rounded corner mask for poem image
+        var shape = this.make.graphics();
+        shape.fillStyle(0xffffff);
+        shape.beginPath();
+        shape.fillRoundedRect(poemX - poemImg.displayWidth / 2, poemY, poemImg.displayWidth, poemImg.displayHeight, 50);
+        var mask = shape.createGeometryMask();
+
+        poemImg.setMask(mask);
 
         var poemAudio = this.sound.add(poemName);
 
