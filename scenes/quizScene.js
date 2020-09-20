@@ -37,8 +37,12 @@ class QuizScene extends Phaser.Scene {
     }
 
     create() {
+        this.updateSidebar();
+        this.events.on('wake', function () {this.updateSidebar()}, this);
+
         let sidebarSize = 100;
         this.cameras.main.setViewport(sidebarSize, 0, this.cameras.main.width - sidebarSize, this.cameras.main.height);
+        this.cameras.main.setRoundPixels(true);
 
 
         // Quiz image
@@ -210,6 +214,15 @@ class QuizScene extends Phaser.Scene {
             },
             align: 'center'
         });
+    }
+
+    updateSidebar() {
+        let answerGridButtons = this.scene.get('sidebarScene').answerGridButtons;
+        answerGridButtons.showButton(0);
+        answerGridButtons.showButton(1);
+        answerGridButtons.hideButton(2);
+        answerGridButtons.hideButton(3);
+        answerGridButtons.layout();
     }
 
 }

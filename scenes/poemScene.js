@@ -5,20 +5,25 @@ class PoemScene extends Phaser.Scene {
 
     constructor() {
         super({key : 'poemScene'});
-        this.wordSpots = {};
-        this.poemLocation = 0;
     }
 
     init(data){
         this.poemName = data.poemName;
+        this.wordSpots = {};
+        this.poemLocation = 0;
     }
 
     preload() {
+
+        // Load poem audio
         this.poemData = this.game.cache.json.get('poemData')["poems"][this.poemName];
         var i;
         for (i = 1; i <= this.poemData['text'].length; i++) {
-            this.load.audio(i, "assets/audio/" + this.poemName + "/" + i + ".mp3");
+            this.cache.audio.remove(i);
+            let audioPath = "assets/audio/" + this.poemName + "/" + i + ".mp3";
+            this.load.audio(i, audioPath);
         }
+
 
         let categorySet = new Set();
         this.poemData['words'].forEach(word => word['categories'].forEach(category => categorySet.add(category)));
@@ -38,14 +43,11 @@ class PoemScene extends Phaser.Scene {
 
         this.masteredWords = JSON.parse(localStorage.getItem("masteredWords"));
 
-
         this.load.scenePlugin({
             key: 'rexuiplugin',
             url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexuiplugin.min.js',
             sceneKey: 'rexUI'
         });
-        this.load.plugin('rexgrayscalepipelineplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexgrayscalepipelineplugin.min.js', true);
-
     }
 
     createWordPlaceholders(words, container) {
@@ -308,31 +310,25 @@ class PoemScene extends Phaser.Scene {
         let lineAudio = this.sound.get(this.poemLocation + 1);
         this.typewritePoemText(this.poemData["text"][this.poemLocation]);
 
-        lineAudio.scene = this;
         lineAudio.once('complete', function() {
-            let cue = this.scene.poemData["cueBox"][this.scene.poemLocation];
-            if (this.scene.wordSpots[cue].assigned) {
-                this.scene.poemLocation += 1;
-                this.scene.typewriteWordChoice(this.scene.wordSpots[cue].word);
+            let cue = this.poemData["cueBox"][this.poemLocation];
+            if (this.wordSpots[cue].assigned) {
+                this.poemLocation += 1;
+                this.typewriteWordChoice(this.scene.wordSpots[cue].word);
             } else {
-                this.scene.showWordChoicesFor(cue);
-                this.scene.poemLocation += 1;
+                this.showWordChoicesFor(cue);
+                this.poemLocation += 1;
             }
-        });
+        }, this);
     }
 
     create() {
+        this.updateSidebar();
+        this.events.on('wake', function () {this.updateSidebar()}, this);
+
         let sidebarSize = 100;
         this.cameras.main.setViewport(sidebarSize, 0, this.cameras.main.width - sidebarSize, this.cameras.main.height);
-        console.log(this.cameras.main);
-
-        this.grayscalePipeline = this.plugins.get('rexgrayscalepipelineplugin').add(this, "GrayScale", {
-            intensity: 1
-        });
-
-        this.grayscalePipeline.setInt1('resolution', 2);
-        console.log(this.grayscalePipeline);
-
+        this.cameras.main.setRoundPixels(true);
 
         // Poem background
         var poemImg = this.add.sprite(0, 0, this.poemName);
@@ -363,6 +359,15 @@ class PoemScene extends Phaser.Scene {
         this.createWordChoiceList();
 
         this.playNextLine();
+    }
+
+    updateSidebar() {
+        let answerGridButtons = this.scene.get('sidebarScene').answerGridButtons;
+        answerGridButtons.hideButton(0);
+        answerGridButtons.showButton(1);
+        answerGridButtons.hideButton(2);
+        answerGridButtons.hideButton(3);
+        answerGridButtons.layout();
     }
 }
 export default PoemScene;

@@ -1,8 +1,7 @@
 class MenuScene extends Phaser.Scene {
     constructor() {
         super({
-            key : 'menuScene',
-
+            key : 'menuScene'
         });
     }
 
@@ -58,8 +57,12 @@ class MenuScene extends Phaser.Scene {
     }
 
     create() {
+        this.updateSidebar();
+        this.events.on('wake', function () {this.updateSidebar()}, this);
+
         let sidebarSize = 100;
         this.cameras.main.setViewport(sidebarSize, 0, this.cameras.main.width - sidebarSize, this.cameras.main.height);
+        this.cameras.main.setRoundPixels(true);
 
         var titleStyle = {
             fontFamily: 'Comic Sans MS, cursive, sans-serif',
@@ -74,6 +77,15 @@ class MenuScene extends Phaser.Scene {
 
         var poems = this.poemJsonData["poems"];
         Object.keys(poems).forEach((poemKey, count) => this.addPoem(poems[poemKey], count));
+    }
+
+    updateSidebar() {
+        let answerGridButtons = this.scene.get('sidebarScene').answerGridButtons;
+        answerGridButtons.hideButton(0);
+        answerGridButtons.hideButton(1);
+        answerGridButtons.showButton(2);
+        answerGridButtons.showButton(3);
+        answerGridButtons.layout();
     }
 
 }
