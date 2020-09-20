@@ -4,6 +4,7 @@ import PoemScene from "./scenes/poemScene.js";
 import QuizScene from "./scenes/quizScene.js";
 import SidebarScene from "./scenes/sidebarScene.js";
 import FriendsScene from "./scenes/friendsScene.js";
+import WordbankScene from "./scenes/wordbankScene.js";
 
 // Our game scene
 let preloadScene = new PreloadScene();
@@ -12,6 +13,7 @@ let poemScene = new PoemScene();
 let quizScene = new QuizScene();
 let sidebarScene = new SidebarScene();
 let friendsScene = new FriendsScene();
+let wordbankScene = new WordbankScene();
 
 var config = {
     type: Phaser.WEBGL,
@@ -37,6 +39,7 @@ game.scene.add("poemScene", poemScene);
 game.scene.add("quizScene", quizScene);
 game.scene.add("sidebarScene", sidebarScene);
 game.scene.add("friendsScene", friendsScene);
+game.scene.add("wordbankScene", wordbankScene);
 
 game.scene.start("preloadScene");
 
