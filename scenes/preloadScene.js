@@ -27,7 +27,7 @@ class PreloadScene extends Phaser.Scene {
 
         var titleStyle = {
             fontFamily: 'Comic Sans MS, cursive, sans-serif',
-            fontSize: '20em',
+            fontSize: '15em',
             color: 0xecf8f9,
             stroke: 0x717676,
             strokeThickness: 3
