@@ -12,13 +12,14 @@ let quizScene = new QuizScene();
 let sidebarScene = new SidebarScene();
 
 var config = {
-    type: Phaser.AUTO,
-    resolution: window.devicePixelRatio,
+    type: Phaser.WEBGL,
+    // resolution: window.devicePixelRatio,
     scale: {
-        mode: Phaser.Scale.RESIZE,
+        mode: Phaser.Scale.NONE,
         parent: "game",
-        width: '100%',
-        height: '100%'
+        width: window.innerWidth * window.devicePixelRatio,
+        height: window.innerHeight * window.devicePixelRatio,
+        zoom: 1 / window.devicePixelRatio
     },
     dom: {
         createContainer: true
