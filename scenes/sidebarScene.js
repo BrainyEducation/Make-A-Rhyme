@@ -64,13 +64,15 @@ class SidebarScene extends Phaser.Scene {
                         this.game.sound.stopAll();
                         this.scene.stop("poemScene");
                         this.scene.stop("quizScene");
+                        this.scene.stop("friendsScene");
                         this.scene.run("menuScene");
                         break;
                     case 'wordbank':
                         console.log("NOT IMPLEMENTED: Go to wordbankScene");
                         break;
                     case 'friends':
-                        console.log("NOT IMPLEMENTED: Go to friendsScene");
+                        this.scene.stop("menuScene");
+                        this.scene.run("friendsScene");
                         break;
                 }
             }, this)
